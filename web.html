@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Pendaftaran Mahasiswa Baru | Sistem Informasi</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e9eef5 100%);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            padding: 2rem 1.5rem;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .hero {
+            background: #0f2b3d;
+            border-radius: 2rem;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 12px 25px -8px rgba(0,0,0,0.15);
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero h1 i {
+            color: #ffb347;
+        }
+
+        .hero p {
+            color: #cbd5e6;
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Card styling */
+        .card {
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(2px);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.6);
+            overflow: hidden;
+            transition: 0.2s;
+        }
+
+        .card-header {
+            background: #f8fafd;
+            padding: 1rem 1.8rem;
+            border-bottom: 2px solid #e2edf7;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .card-header i {
+            color: #2c6e9e;
+            font-size: 1.4rem;
+        }
+
+        .card-body {
+            padding: 1.6rem 2rem;
+        }
+
+        /* Form grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.3rem 1.8rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2c5a7a;
+        }
+
+        .input-group label i {
+            width: 24px;
+            color: #ff8c42;
+        }
+
+        input, select, textarea {
+            padding: 10px 14px;
+            border-radius: 14px;
+            border: 1.5px solid #e2e8f0;
+            font-family: 'Inter', monospace;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+
+        .harga-field, .tgl-field {
+            font-family: monospace;
+        }
+
+        .nilai-group {
+            grid-column: span 1;
+            background: #f9fbfe;
+            padding: 0.8rem 1rem;
+            border-radius: 1rem;
+            margin-top: 0.2rem;
+        }
+
+        .nilai-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #0f2b3d;
+            border-left: 4px solid #ffb347;
+            padding-left: 12px;
+        }
+
+        .sub-nilai {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        button.btn-daftar {
+            background: #0f2b3d;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-weight: 700;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 1rem;
+        }
+
+        button.btn-daftar:hover {
+            background: #1e4a6e;
+            transform: scale(0.98);
+        }
+
+        /* Tabel data pendaftaran */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 1rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .data-table th {
+            background: #eef3fc;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            color: #1e4a6e;
+            border-bottom: 2px solid #cbdde9;
+        }
+
+        .data-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #e9f0f5;
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover {
+            background: #fefce8;
+        }
+
+        .btn-hapus {
+            background: #fee2e2;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 30px;
+            color: #b91c1c;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.7rem;
+        }
+
+        .btn-hapus:hover {
+            background: #fecaca;
+        }
+
+        .empty-row td {
+            text-align: center;
+            color: #6c86a3;
+            padding: 2rem;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            margin-top: 2rem;
+            color: #5f7d9c;
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 1rem;
+            }
+            .card-body {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1><i class="fas fa-graduation-cap"></i> Pendaftaran Mahasiswa Baru</h1>
+        <p><i class="fas fa-edit"></i> Lengkapi formulir di bawah untuk melakukan pendaftaran. Data akan tampil di tabel "Data Pendaftaran".</p>
+    </div>
+
+    <!-- Form Pendaftaran -->
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-file-alt"></i> Form Pendaftaran
+        </div>
+        <div class="card-body">
+            <form id="registrationForm">
+                <div class="form-grid">
+                    <!-- Pilih Gedung -->
+                    <div class="input-group">
+                        <label><i class="fas fa-building"></i> Pilih Gedung:</label>
+                        <select id="gedung" required>
+                            <option value="A - Gedung A">A - Gedung A</option>
+                            <option value="B - Gedung B">B - Gedung B</option>
+                            <option value="C - Gedung C">C - Gedung C</option>
+                        </select>
+                    </div>
+
+                    <!-- Bulan Tes (1-12) -->
+                    <div class="input-group">
+                        <label><i class="fas fa-calendar-alt"></i> Bulan Tes (1-12):</label>
+                        <input type="number" id="bulanTes" min="1" max="12" placeholder="Contoh: 6" required>
+                    </div>
+
+                    <!-- Nama Pendaftar -->
+                    <div class="input-group">
+                        <label><i class="fas fa-user"></i> Nama Pendaftar:</label>
+                        <input type="text" id="nama" placeholder="Nama lengkap" required>
+                    </div>
+
+                    <!-- E-mail -->
+                    <div class="input-group">
+                        <label><i class="fas fa-envelope"></i> E-mail:</label>
+                        <input type="email" id="email" placeholder="nama@example.com" required>
+                    </div>
+
+                    <!-- Telp -->
+                    <div class="input-group">
+                        <label><i class="fas fa-phone"></i> Telp:</label>
+                        <input type="tel" id="telp" placeholder="Nomor telepon" required>
+                    </div>
+
+                    <!-- TK (Tempat Kelahiran / Tes Kemampuan) -->
+                    <div class="input-group">
+                        <label><i class="fas fa-map-marker-alt"></i> TK (Tempat Kelahiran / Tes Kemampuan):</label>
+                        <input type="text" id="tk" placeholder="Kota lahir / kode tes" required>
+                    </div>
+
+                    <!-- Tanggal Pendaftar (dd/mm/yyyy) default 01/01/2025 -->
+                    <div class="input-group">
+                        <label><i class="fas fa-calendar-check"></i> Tanggal Pendaftar (dd/mm/yyyy):</label>
+                        <input type="text" id="tglPendaftar" placeholder="dd/mm/yyyy" value="01/01/2025" required>
+                    </div>
+
+                    <!-- Biro -->
+                    <div class="input-group">
+                        <label><i class="fas fa-chess-queen"></i> Biro:</label>
+                        <input type="text" id="biro" placeholder="Biro / unit" required>
+                    </div>
+
+                    <!-- Harga (Rp) -->
+                    <div class="input-group">
+                        <label><i class="fas fa-money-bill-wave"></i> Harga (Rp):</label>
+                        <input type="number" id="harga" placeholder="0" value="0" step="1000" required>
+                    </div>
+
+                    <!-- TGL (Tanggal Lahir) -->
+                    <div class="input-group">
+                        <label><i class="fas fa-birthday-cake"></i> TGL (Tanggal Lahir):</label>
+                        <input type="text" id="tglLahir" placeholder="dd/mm/yyyy" required>
+                    </div>
+
+                    <!-- TUJU -->
+                    <div class="input-group">
+                        <label><i class="fas fa-flag-checkered"></i> TUJU:</label>
+                        <input type="text" id="tuju" placeholder="Tujuan / Prodi" required>
+                    </div>
+
+                    <!-- TENTANG -->
+                    <div class="input-group">
+                        <label><i class="fas fa-info-circle"></i> TENTANG:</label>
+                        <textarea id="tentang" rows="2" placeholder="Informasi tambahan..."></textarea>
+                    </div>
+
+                    <!-- Nilai Ujian + sub nilai -->
+                    <div class="nilai-group">
+                        <div class="nilai-title"><i class="fas fa-star-of-life"></i> Nilai Ujian</div>
+                        <div class="sub-nilai">
+                            <div class="input-group" style="margin-bottom:0">
+                                <label>Matematika:</label>
+                                <input type="number" id="matematika" step="any" placeholder="0-100" required>
+                            </div>
+                            <div class="input-group" style="margin-bottom:0">
+                                <label>Bahasa Inggris:</label>
+                                <input type="number" id="bahasaInggris" step="any" placeholder="0-100" required>
+                            </div>
+                            <div class="input-group" style="margin-bottom:0">
+                                <label>Umum:</label>
+                                <input type="number" id="umum" step="any" placeholder="0-100" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-daftar"><i class="fas fa-user-plus"></i> Daftar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Data Pendaftaran (tabel) -->
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-database"></i> Data Pendaftaran
+        </div>
+        <div class="card-body">
+            <div class="table-wrapper">
+                <table class="data-table" id="registrationTable">
+                    <thead>
+                        <tr>
+                            <th>No</th><th>Gedung</th><th>Bulan Tes</th><th>Nama</th><th>Email</th><th>Telp</th>
+                            <th>TK</th><th>Tgl Daftar</th><th>Biro</th><th>Harga (Rp)</th><th>Tgl Lahir</th>
+                            <th>TUJU</th><th>TENTANG</th><th>Nilai (Mtk/Ingg/Umum)</th><th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr class="empty-row"><td colspan="15">Belum ada data pendaftaran.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <i class="fas fa-registered"></i> Sistem Pendaftaran Mahasiswa Baru - Data tersimpan secara lokal selama sesi berlangsung.
+    </footer>
+</div>
+
+<script>
+    // Array penyimpanan data pendaftaran
+    let registrations = [];
+
+    // Fungsi untuk merender tabel berdasarkan array registrations
+    function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        if (registrations.length === 0) {
+            tbody.innerHTML = '<tr class="empty-row"><td colspan="15">Belum ada data pendaftaran.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = '';
+        registrations.forEach((reg, index) => {
+            const row = tbody.insertRow();
+            // No
+            const cellNo = row.insertCell(0);
+            cellNo.innerText = index + 1;
+            // Gedung
+            row.insertCell(1).innerText = reg.gedung || '-';
+            // Bulan Tes
+            row.insertCell(2).innerText = reg.bulanTes || '-';
+            // Nama
+            row.insertCell(3).innerText = reg.nama || '-';
+            // Email
+            row.insertCell(4).innerText = reg.email || '-';
+            // Telp
+            row.insertCell(5).innerText = reg.telp || '-';
+            // TK
+            row.insertCell(6).innerText = reg.tk || '-';
+            // Tgl Daftar
+            row.insertCell(7).innerText = reg.tglPendaftar || '-';
+            // Biro
+            row.insertCell(8).innerText = reg.biro || '-';
+            // Harga (format Rupiah)
+            let hargaFormatted = reg.harga ? parseInt(reg.harga).toLocaleString('id-ID') : '0';
+            row.insertCell(9).innerText = `Rp ${hargaFormatted}`;
+            // Tgl Lahir
+            row.insertCell(10).innerText = reg.tglLahir || '-';
+            // TUJU
+            row.insertCell(11).innerText = reg.tuju || '-';
+            // TENTANG
+            row.insertCell(12).innerText = reg.tentang || '-';
+            // Nilai gabungan
+            const nilaiStr = `M:${reg.matematika || 0} | B.Ing:${reg.bahasaInggris || 0} | U:${reg.umum || 0}`;
+            row.insertCell(13).innerText = nilaiStr;
+            // Aksi (tombol hapus)
+            const actionCell = row.insertCell(14);
+            const delBtn = document.createElement('button');
+            delBtn.innerText = 'Hapus';
+            delBtn.className = 'btn-hapus';
+            delBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Hapus';
+            delBtn.addEventListener('click', () => {
+                registrations.splice(index, 1);
+                renderTable();
+            });
+            actionCell.appendChild(delBtn);
+        });
+    }
+
+    // Validasi tanggal format dd/mm/yyyy
+    function isValidDateDDMMYYYY(dateStr) {
+        if (!dateStr) return false;
+        const parts = dateStr.split('/');
+        if (parts.length !== 3) return false;
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10);
+        const year = parseInt(parts[2], 10);
+        if (isNaN(day) || isNaN(month) || isNaN(year)) return false;
+        if (month < 1 || month > 12) return false;
+        const daysInMonth = new Date(year, month, 0).getDate();
+        if (day < 1 || day > daysInMonth) return false;
+        return true;
+    }
+
+    // event submit form
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // ambil nilai dari masing-masing field
+        const gedung = document.getElementById('gedung').value;
+        const bulanTes = document.getElementById('bulanTes').value;
+        const nama = document.getElementById('nama').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const telp = document.getElementById('telp').value.trim();
+        const tk = document.getElementById('tk').value.trim();
+        const tglPendaftar = document.getElementById('tglPendaftar').value.trim();
+        const biro = document.getElementById('biro').value.trim();
+        const harga = document.getElementById('harga').value;
+        const tglLahir = document.getElementById('tglLahir').value.trim();
+        const tuju = document.getElementById('tuju').value.trim();
+        const tentang = document.getElementById('tentang').value.trim();
+        const matematika = document.getElementById('matematika').value;
+        const bahasaInggris = document.getElementById('bahasaInggris').value;
+        const umum = document.getElementById('umum').value;
+
+        // validasi sederhana
+        if (!nama || !email || !telp || !tk || !biro || !tuju) {
+            alert('Harap isi field yang wajib: Nama, Email, Telp, TK, Biro, TUJU');
+            return;
+        }
+        if (!bulanTes || bulanTes < 1 || bulanTes > 12) {
+            alert('Bulan Tes harus antara 1 - 12');
+            return;
+        }
+        if (!isValidDateDDMMYYYY(tglPendaftar)) {
+            alert('Format Tanggal Pendaftar tidak valid (gunakan dd/mm/yyyy) contoh: 01/01/2025');
+            return;
+        }
+        if (!isValidDateDDMMYYYY(tglLahir)) {
+            alert('Format Tanggal Lahir tidak valid (dd/mm/yyyy)');
+            return;
+        }
+        if (matematika === '' || bahasaInggris === '' || umum === '') {
+            alert('Nilai Matematika, Bahasa Inggris, dan Umum harus diisi');
+            return;
+        }
+        const nilaiMtk = parseFloat(matematika);
+        const nilaiIng = parseFloat(bahasaInggris);
+        const nilaiU = parseFloat(umum);
+        if (isNaN(nilaiMtk) || isNaN(nilaiIng) || isNaN(nilaiU)) {
+            alert('Nilai harus berupa angka');
+            return;
+        }
+        if (nilaiMtk < 0 || nilaiMtk > 100 || nilaiIng < 0 || nilaiIng > 100 || nilaiU < 0 || nilaiU > 100) {
+            alert('Nilai ujian harus dalam rentang 0-100');
+            return;
+        }
+
+        // Buat object data
+        const newData = {
+            gedung,
+            bulanTes,
+            nama,
+            email,
+            telp,
+            tk,
+            tglPendaftar,
+            biro,
+            harga: harga === '' ? 0 : parseFloat(harga),
+            tglLahir,
+            tuju,
+            tentang: tentang || '-',
+            matematika: nilaiMtk,
+            bahasaInggris: nilaiIng,
+            umum: nilaiU,
+        };
+
+        registrations.push(newData);
+        renderTable();
+
+        // reset form (opsional, tidak semua direset, biarkan beberapa default)
+        this.reset();
+        // set default tgl pendaftar lagi karena reset menghilangkan
+        document.getElementById('tglPendaftar').value = '01/01/2025';
+        document.getElementById('gedung').value = 'A - Gedung A';
+        document.getElementById('harga').value = '0';
+        // optional, fokus ke nama
+        document.getElementById('nama').focus();
+
+        // beri notifikasi sukses
+        alert('Pendaftaran berhasil ditambahkan!');
+    });
+
+    // set default tanggal pendaftar = 01/01/2025 saat halaman dimuat
+    window.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('tglPendaftar').value = '01/01/2025';
+        // Contoh data awal biar tidak kosong? Biarkan sesuai permintaan "Belum ada data pendaftaran" awal benar kosong.
+        // tapi jika ingin memberikan contoh, bisa diaktifkan, namun sesuai spesifikasi awal kosong.
+        // Tidak ada data awal.
+    });
+</script>
+</body>
+</html>
